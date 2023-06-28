@@ -1,0 +1,13 @@
+form {
+  width: 60%;
+  display: flex;
+  justify-content: space-around;
+  border: 2px solid #000;
+  font-size: 20px;
+  padding: 20px 20px;
+  select,
+  option,
+  input {
+    font-size: 20px;
+  }
+}

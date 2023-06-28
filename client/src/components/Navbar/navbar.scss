@@ -1,0 +1,14 @@
+.navbar {
+  background: #562b5a;
+  height: 40px;
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .logo {
+    font-size: 40px;
+    font-weight: 400;
+    font-style: italic;
+    color: #bd8b0c;
+  }
+}
