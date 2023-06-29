@@ -1,0 +1,30 @@
+.navbar {
+  background: transparent;
+  height: 40px;
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 5px solid;
+  border-image: linear-gradient(#cef00d, #dd2476, #1c64ff, #8900f8) 1;
+  animation: rotate 2.5s ease-in infinite;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  box-shadow: 1px 1px 20px 2px #8900f8;
+  .logo {
+    font-size: 50px;
+    font-weight: 600;
+    color: #fff;
+  }
+  button {
+    margin-right: 20px;
+    font-size: 28px;
+  }
+  @keyframes rotate {
+    50% {
+      border-image: linear-gradient(360deg, #fd2e05, #dd2476, #1256e9, #8900f8)
+        1;
+    }
+  }
+}

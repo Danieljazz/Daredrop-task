@@ -1,0 +1,44 @@
+.streamer-list {
+  margin-top: 20px;
+  width: 80%;
+  font-size: 40px;
+  color: white;
+  ul {
+    list-style: none;
+    padding: 0;
+    li {
+      height: 80px;
+      border: 1px solid;
+      margin: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: ease-in-out all 0.3s;
+      cursor: pointer;
+      border-radius: 20px 20px;
+      & > span {
+        margin-left: 20px;
+      }
+      .vote-section {
+        margin-right: 20px;
+        display: flex;
+        gap: 1rem;
+        i {
+          transition: all ease-in-out 0.3s;
+        }
+        .la-angle-up:hover {
+          color: #39ff14;
+          transform: scale(1.3);
+        }
+        .la-angle-down:hover {
+          color: #ff1818;
+          transform: scale(1.3);
+        }
+      }
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 2px 0px 13px 6px #e600a8;
+      }
+    }
+  }
+}
