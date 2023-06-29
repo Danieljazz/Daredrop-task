@@ -1,5 +1,6 @@
 import Navbar from "../../components/Navbar/Navbar";
 import NewStreamerForm from "../../components/NewStreamerForm/NewStreamerForm";
+import StreamerList from "../../components/StreamerList/StreamerList";
 import "./home.scss";
 const Home = () => {
   return (
@@ -7,7 +8,7 @@ const Home = () => {
       <Navbar />
       <div className="main-content">
         <NewStreamerForm />
-        <div>Hi form home</div>
+        <StreamerList />
       </div>
     </div>
   );

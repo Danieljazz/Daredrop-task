@@ -4,7 +4,9 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="logo">Dare2Stream</div>
-      <button>H</button>
+      <button>
+        <i class="las la-home"></i>
+      </button>
     </div>
   );
 };
