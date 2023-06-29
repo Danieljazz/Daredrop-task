@@ -1,0 +1,68 @@
+.new-streamer-form {
+  width: 60%;
+  display: flex;
+  justify-content: space-around;
+  border: 4px solid #e600a8;
+  font-size: 20px;
+  padding: 20px 20px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  box-shadow: -1px -1px 11px 2px #e600a8;
+  border-radius: 10px 10px;
+  h1 {
+    color: white;
+  }
+  form {
+    width: 100%;
+    margin-top: 40px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    gap: 2rem;
+    select,
+    option,
+    input,
+    textarea {
+      font-size: 20px;
+    }
+    #name,
+    #platform {
+      width: 160px;
+    }
+
+    textarea {
+      width: 60%;
+      height: 90px;
+      width: 60%;
+      height: 90px;
+    }
+    .first-row-form {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: center;
+      gap: 1rem;
+      & > label:nth-child(3) {
+        margin-left: 2rem;
+      }
+    }
+    .submit-section {
+      width: 100%;
+      & > button {
+        float: right;
+        margin-right: 20px;
+        font-size: 20px;
+        border: 1px solid #8900f8;
+        box-shadow: -1px -1px 9px 2px #8900f8;
+        border-radius: 20px 20px;
+        background-color: #e600a8;
+        color: white;
+        padding: 15px;
+        cursor: pointer;
+      }
+    }
+  }
+}
