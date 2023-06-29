@@ -1,19 +1,18 @@
 import { db } from "../db_connection.js";
 
 export const newStreamer = (req, res) => {
-  const q =
-    "INSERT INTO streamers(name, description, platform, votes, img) VALUES (?, ?, ?, ?, ?)";
-  const defaultPhoto =
-    "https://cdn-icons-png.flaticon.com/512/44/44948.png?w=826&t=st=1687617160~exp=1687617760~hmac=https://static-cdn.jtvnw.net/jtv_user_pictures/asmongold-profile_image-f7ddcbd0332f5d28-300x300.png";
+  let q = "SELECT * FROM streamers WHERE name=? AND platform=?";
   const newStreamerData = [
     req.body.name,
     req.body.description,
     req.body.platform,
-    0,
-    defaultPhoto,
   ];
   try {
-    const stmt = db.prepare(q);
+    let stmt = db.prepare(q);
+    const data = stmt.get([req.body.name, req.body.platform]);
+    if (data) return res.status(409).json("Streamer already exists");
+    q = "INSERT INTO streamers(name, description, platform) VALUES (?, ?, ?)";
+    stmt = db.prepare(q);
     stmt.run(...newStreamerData);
     res.status(201).json("New streamer has been added");
   } catch (e) {
@@ -24,7 +23,7 @@ export const allStreamers = (req, res) => {
   const q = "SELECT * FROM streamers";
   try {
     const stmt = db.prepare(q);
-    const data = stmt.get();
+    const data = stmt.all();
     res.status(200).json(data);
   } catch (e) {
     res.status(500).json(`There is a db problem \n ${e}`);
@@ -43,24 +42,49 @@ export const specificStreamer = (req, res) => {
 export const newVote = (req, res) => {
   let q = "";
   if (req.body.voteType === "upvote") {
-    q = "UPDATE streamers SET votes=votes+1 WHERE id=?";
+    q =
+      "INSERT INTO votes(streamerId, userId, vote) VALUES(?, ?, 1) ON CONFLICT(streamerId, userId) DO UPDATE SET vote=1";
   } else if (req.body.voteType === "downvote") {
-    q = "UPDATE streamers SET votes=votes-1 WHERE id=? ";
+    q =
+      "INSERT INTO votes(streamerId, userId, vote) VALUES(?, ?, -1) ON CONFLICT(streamerId, userId) DO UPDATE SET vote=-1";
   } else {
     return res.status(500).json("Wrong vote type");
   }
   try {
     const stmt = db.prepare(q);
-    stmt.run(req.params.streamerId);
+    stmt.run([req.params.streamerId, req.body.userId]);
   } catch (e) {
-    return res.status(500).json("Cannot change vote count");
+    return res.status(500).json(e);
   }
   try {
-    const voteQuery = "SELECT votes FROM streamers WHERE id=?";
+    const voteQuery = "SELECT SUM(vote) as votes from votes where streamerId=?";
     const stmt = db.prepare(voteQuery);
     const voteCount = stmt.get(req.params.streamerId);
     res.status(200).json(voteCount);
   } catch (e) {
     return res.status(500).json("Cannot receive vote count");
+  }
+};
+
+export const deleteVote = (req, res) => {
+  const q = "DELETE FROM votes WHERE streamerId=? AND userId=?";
+  try {
+    const stmt = db.prepare(q);
+    stmt.run([req.params.streamerId, req.body.userId]);
+    stmt.finalize();
+    res.status(200).json(`Vote for deleted ${req.params.streamerId}`);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
+export const userVotes = (req, res) => {
+  const q = "SELECT * FROM votes WHERE userId=?";
+  try {
+    const stmt = db.prepare(q);
+    const votes = stmt.all(req.params.userId);
+    res.status(200).json(votes);
+  } catch (e) {
+    res.status(500).json(e);
   }
 };
