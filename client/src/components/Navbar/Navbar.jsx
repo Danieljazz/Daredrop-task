@@ -3,9 +3,13 @@ import "./navbar.scss";
 const Navbar = () => {
   return (
     <div className="navbar">
-      <div className="logo">Dare2Stream</div>
+      <a href="/" style={{ textDecoration: "none" }}>
+        <div className="logo">Dare2Stream</div>
+      </a>{" "}
       <button>
-        <i class="las la-home"></i>
+        <a href="/" style={{ textDecoration: "none" }}>
+          <i class="las la-home"></i>
+        </a>{" "}
       </button>
     </div>
   );
