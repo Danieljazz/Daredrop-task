@@ -20,7 +20,8 @@ export const newStreamer = (req, res) => {
   }
 };
 export const allStreamers = (req, res) => {
-  const q = "SELECT * FROM streamers";
+  const q =
+    "SELECT id, name, description, platform, img, SUM(vote) as votes FROM streamers LEFT JOIN votes ON(streamerId=streamers.id) GROUP BY streamerId";
   try {
     const stmt = db.prepare(q);
     const data = stmt.all();
@@ -30,7 +31,8 @@ export const allStreamers = (req, res) => {
   }
 };
 export const specificStreamer = (req, res) => {
-  const q = "SELECT * FROM streamers WHERE id=?";
+  const q =
+    "SELECT id, name, description, platform, img, SUM(vote) as votes FROM streamers LEFT JOIN votes ON(streamerId=streamers.id) WHERE streamerId=?";
   try {
     const stmt = db.prepare(q);
     const streamerData = stmt.get(req.params.streamerId);
