@@ -38,12 +38,7 @@ const NewStreamerForm = ({ socket }) => {
       <form>
         <div className="first-row-form">
           <label htmlFor="name">Name</label>
-          <input
-            id="name"
-            onChange={handlerChange}
-            value={newStreamer.name}
-            required
-          />
+          <input id="name" onChange={handlerChange} value={newStreamer.name} />
           <label htmlFor="platform">Platform</label>
           <select
             id="platform"
@@ -62,7 +57,6 @@ const NewStreamerForm = ({ socket }) => {
           id="description"
           onChange={handlerChange}
           value={newStreamer.description}
-          required
         />
         <div className="submit-section" onClick={addNewStreamer}>
           <button>Submit</button>

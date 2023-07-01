@@ -79,7 +79,6 @@ export const deleteVote = (req, res) => {
     stmt.run([req.params.streamerId, req.params.userId]);
     res.status(200).json(`Vote for deleted ${req.params.streamerId}`);
   } catch (e) {
-    console.log(e);
     res.status(500).json(e);
   }
 };
