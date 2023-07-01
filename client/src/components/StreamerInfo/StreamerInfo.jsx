@@ -1,13 +1,17 @@
+import { useParams } from "react-router-dom";
 import "./streamerInfo.scss";
+import { useEffect, useState } from "react";
+import { makeRequest } from "../../createRequest";
 
 const StreamerInfo = () => {
-  const streamerData = {
-    id: 1,
-    name: "IZakoo",
-    description: "CSGO",
-    platform: "Twitch",
-    img: "https://static-cdn.jtvnw.net/jtv_user_pictures/asmongold-profile_image-f7ddcbd0332f5d28-300x300.png",
-  };
+  const { streamerId } = useParams();
+  const [streamerData, setStreamerData] = useState({});
+  useEffect(() => {
+    makeRequest.get(`/streamers/${streamerId}`).then((res) => {
+      setStreamerData(res.data);
+    });
+  }, []);
+
   return (
     <div className="streamer-info">
       <img src={streamerData.img} />

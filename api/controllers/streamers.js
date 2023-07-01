@@ -14,6 +14,10 @@ export const newStreamer = (req, res) => {
     q = "INSERT INTO streamers(name, description, platform) VALUES (?, ?, ?)";
     stmt = db.prepare(q);
     stmt.run(...newStreamerData);
+    q =
+      "INSERT INTO votes(streamerId, userId, vote) SELECT id, 0, 0 FROM streamers AS s WHERE NOT EXISTS (SELECT * FROM votes WHERE votes.streamerId=s.id)";
+    stmt = db.prepare(q);
+    stmt.run();
     res.status(201).json("New streamer has been added");
   } catch (e) {
     res.status(500).json(`Cannot add new streamer \n ${e}`);
@@ -21,7 +25,7 @@ export const newStreamer = (req, res) => {
 };
 export const allStreamers = (req, res) => {
   const q =
-    "SELECT id, name, description, platform, img, SUM(vote) as votes FROM streamers LEFT JOIN votes ON(streamerId=streamers.id) GROUP BY streamerId";
+    "SELECT streamers.id as sid, name, description, platform, img, SUM(vote) as votes FROM streamers LEFT JOIN votes ON(streamerId=sid) GROUP BY streamerId ORDER BY SUM(vote) DESC";
   try {
     const stmt = db.prepare(q);
     const data = stmt.all();
@@ -32,7 +36,7 @@ export const allStreamers = (req, res) => {
 };
 export const specificStreamer = (req, res) => {
   const q =
-    "SELECT id, name, description, platform, img, SUM(vote) as votes FROM streamers LEFT JOIN votes ON(streamerId=streamers.id) WHERE streamerId=?";
+    "SELECT streamers.id as sid, name, description, platform, img, SUM(vote) as votes FROM streamers LEFT JOIN votes ON(streamerId=sid) WHERE streamerId=?";
   try {
     const stmt = db.prepare(q);
     const streamerData = stmt.get(req.params.streamerId);
@@ -72,10 +76,10 @@ export const deleteVote = (req, res) => {
   const q = "DELETE FROM votes WHERE streamerId=? AND userId=?";
   try {
     const stmt = db.prepare(q);
-    stmt.run([req.params.streamerId, req.body.userId]);
-    stmt.finalize();
+    stmt.run([req.params.streamerId, req.params.userId]);
     res.status(200).json(`Vote for deleted ${req.params.streamerId}`);
   } catch (e) {
+    console.log(e);
     res.status(500).json(e);
   }
 };
