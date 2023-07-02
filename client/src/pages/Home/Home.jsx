@@ -4,7 +4,6 @@ import StreamerList from "../../components/StreamerList/StreamerList";
 import "./home.scss";
 import { useEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
-import { makeRequest } from "../../createRequest";
 
 const Home = () => {
   const [socket, setSocket] = useState(null);
@@ -21,6 +20,7 @@ const Home = () => {
         <NewStreamerForm socket={socket} />
         <StreamerList socket={socket} />
       </div>
+      {/*Made using -> https://svgwave.in/ */}
       <svg
         width="100%"
         height="100%"

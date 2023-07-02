@@ -1,7 +1,6 @@
 import "./newStreamerForm.scss";
 import { makeRequest } from "../../createRequest";
 import { useState } from "react";
-import axios from "axios";
 
 const NewStreamerForm = ({ socket }) => {
   const [newStreamer, setNewStreamer] = useState({ platform: "Twitch" });
@@ -15,23 +14,28 @@ const NewStreamerForm = ({ socket }) => {
   const addNewStreamer = (e) => {
     e.preventDefault();
     setPostError(null);
-    console.log(newStreamer);
-    makeRequest
-      .post("/streamers", {
-        name: newStreamer.name,
-        platform: newStreamer.platform,
-        description: newStreamer.description,
-      })
-      .then(() => {
-        socket.emit("db_update");
-        setNewStreamer({ name: "", platform: "Twitch", description: "" });
-      })
-      .catch((e) => setPostError(e));
-    // socket.on("db_update_response", () => {
-    //   console.log("new data available for form");
-    // });
-    // axios.get("http://localhost:8080/api/v1/streamers");
+    setFormError(null);
+    const requiredInputs = ["name", "platform", "description"];
+    let missingKey = requiredInputs.filter(
+      (input) => !Object.keys(newStreamer).includes(input)
+    );
+    if (missingKey.length > 0) {
+      setFormError(missingKey);
+    } else {
+      makeRequest
+        .post("/streamers", {
+          name: newStreamer.name,
+          platform: newStreamer.platform,
+          description: newStreamer.description,
+        })
+        .then(() => {
+          socket.emit("db_update");
+          setNewStreamer({ name: "", platform: "Twitch", description: "" });
+        })
+        .catch((e) => setPostError(e.response.data));
+    }
   };
+  console.log(postError);
   return (
     <div className="new-streamer-form">
       <h1>Add new streamer</h1>
@@ -61,8 +65,11 @@ const NewStreamerForm = ({ socket }) => {
         <div className="submit-section" onClick={addNewStreamer}>
           <button>Submit</button>
         </div>
-        {postError && (
-          <div style={{ color: "red" }}>Smth went wrong cannot post </div>
+        {postError && <div style={{ color: "red" }}>{`${postError}`}</div>}
+        {formError && (
+          <div style={{ color: "red" }}>
+            <span>{`Missing required inputs: ${formError}`}</span>
+          </div>
         )}
       </form>
     </div>
