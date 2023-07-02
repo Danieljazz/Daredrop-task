@@ -8,7 +8,7 @@ const Navbar = () => {
       </a>{" "}
       <button>
         <a href="/" style={{ textDecoration: "none" }}>
-          <i class="las la-home"></i>
+          <i className="las la-home"></i>
         </a>{" "}
       </button>
     </div>

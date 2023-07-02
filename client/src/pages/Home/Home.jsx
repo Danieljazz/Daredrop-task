@@ -2,13 +2,24 @@ import Navbar from "../../components/Navbar/Navbar";
 import NewStreamerForm from "../../components/NewStreamerForm/NewStreamerForm";
 import StreamerList from "../../components/StreamerList/StreamerList";
 import "./home.scss";
+import { useEffect, useState } from "react";
+import socketIOClient from "socket.io-client";
+import { makeRequest } from "../../createRequest";
+
 const Home = () => {
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const ENDPOINT = "http://localhost:8080";
+    const socket = socketIOClient(ENDPOINT);
+    setSocket(socket);
+  }, []);
   return (
     <div className="home-page">
       <Navbar />
       <div className="main-content">
-        <NewStreamerForm />
-        <StreamerList />
+        <NewStreamerForm socket={socket} />
+        <StreamerList socket={socket} />
       </div>
       <svg
         width="100%"

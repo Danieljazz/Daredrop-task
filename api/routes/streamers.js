@@ -13,6 +13,6 @@ router.post("/", newStreamer);
 router.get("/", allStreamers);
 router.get("/:streamerId", specificStreamer);
 router.put("/:streamerId/vote", newVote);
-router.delete("/:streamerId/vote", deleteVote);
+router.delete("/:streamerId/vote/:userId", deleteVote);
 router.get("/votes/:userId", userVotes);
 export default router;
