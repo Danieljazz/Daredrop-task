@@ -5,11 +5,11 @@ const Navbar = () => {
     <div className="navbar">
       <a href="/" style={{ textDecoration: "none" }}>
         <div className="logo">Dare2Stream</div>
-      </a>{" "}
+      </a>
       <button>
         <a href="/" style={{ textDecoration: "none" }}>
           <i className="las la-home"></i>
-        </a>{" "}
+        </a>
       </button>
     </div>
   );

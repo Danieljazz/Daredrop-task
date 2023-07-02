@@ -6,22 +6,24 @@ import cors from "cors";
 
 const app = express();
 const httpServer = http.createServer(app);
+const corsOrigin = ["http://localhost:5173", "http://127.0.0.1:5173"];
+const serverPort = 8080;
 const socketServer = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: corsOrigin,
   },
 });
 
 app.use(express.json());
 app.use((req, res, next) => {
   res.header({
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": corsOrigin,
   });
   next();
 });
 app.use(
   cors({
-    origin: "*",
+    origin: corsOrigin,
   })
 );
 app.use("/api/v1/streamers", streamersRoutes);
@@ -34,6 +36,6 @@ socketServer.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(8080, () => {
-  console.log("Server runing on port 8080");
+httpServer.listen(serverPort, () => {
+  console.log(`Server runing on port ${serverPort}`);
 });

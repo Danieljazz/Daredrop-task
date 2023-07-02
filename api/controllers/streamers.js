@@ -14,13 +14,14 @@ export const newStreamer = (req, res) => {
     q = "INSERT INTO streamers(name, description, platform) VALUES (?, ?, ?)";
     stmt = db.prepare(q);
     stmt.run(...newStreamerData);
+    // creating empty votes when new streamer
     q =
       "INSERT INTO votes(streamerId, userId, vote) SELECT id, 0, 0 FROM streamers AS s WHERE NOT EXISTS (SELECT * FROM votes WHERE votes.streamerId=s.id)";
     stmt = db.prepare(q);
     stmt.run();
     res.status(201).json("New streamer has been added");
   } catch (e) {
-    res.status(500).json(`Cannot add new streamer \n ${e}`);
+    res.status(500).json(`Cannot add new streamer. ${e}`);
   }
 };
 export const allStreamers = (req, res) => {
@@ -31,7 +32,7 @@ export const allStreamers = (req, res) => {
     const data = stmt.all();
     res.status(200).json(data);
   } catch (e) {
-    res.status(500).json(`There is a db problem \n ${e}`);
+    res.status(500).json(`Cannot get all streamers. ${e}`);
   }
 };
 export const specificStreamer = (req, res) => {
@@ -40,9 +41,11 @@ export const specificStreamer = (req, res) => {
   try {
     const stmt = db.prepare(q);
     const streamerData = stmt.get(req.params.streamerId);
+    if (streamerData.sid === null)
+      return res.status(404).json("Streamer not found");
     res.status(200).json(streamerData);
   } catch (e) {
-    res.status(500).json(`Cannot get streamer \n e`);
+    res.status(500).json(`Cannot get streamer. ${e}`);
   }
 };
 export const newVote = (req, res) => {
@@ -60,7 +63,7 @@ export const newVote = (req, res) => {
     const stmt = db.prepare(q);
     stmt.run([req.params.streamerId, req.body.userId]);
   } catch (e) {
-    return res.status(500).json(e);
+    return res.status(500).json(`Cannot create a vote. ${e}`);
   }
   try {
     const voteQuery = "SELECT SUM(vote) as votes from votes where streamerId=?";
@@ -68,7 +71,7 @@ export const newVote = (req, res) => {
     const voteCount = stmt.get(req.params.streamerId);
     res.status(200).json(voteCount);
   } catch (e) {
-    return res.status(500).json("Cannot receive vote count");
+    return res.status(500).json(`Cannot receive vote count. ${e}`);
   }
 };
 
@@ -79,7 +82,7 @@ export const deleteVote = (req, res) => {
     stmt.run([req.params.streamerId, req.params.userId]);
     res.status(200).json(`Vote for deleted ${req.params.streamerId}`);
   } catch (e) {
-    res.status(500).json(e);
+    res.status(500).json(`Cannot delete a vote. ${e}`);
   }
 };
 
@@ -90,6 +93,6 @@ export const userVotes = (req, res) => {
     const votes = stmt.all(req.params.userId);
     res.status(200).json(votes);
   } catch (e) {
-    res.status(500).json(e);
+    res.status(500).json(`Cannot get a user votes. ${e}`);
   }
 };
